@@ -13,7 +13,7 @@ const io = new Server(server);
     if (!fs.existsSync('./public/' + f)) console.log(`⚠️  Missing library: ${f}`);
 });
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname + '/public'));
 app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'));
 
 // --- STATE ---
