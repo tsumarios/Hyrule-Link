@@ -23,7 +23,7 @@ The server acts only as a relay for encrypted message payloads and does not have
 * **“Nudge” feature** that triggers device vibration (where supported)
 * **Ephemeral message retention** (last 50 encrypted messages per room)
 
-<img width="300" height="400" alt="Screenshot" src="https://github.com/user-attachments/assets/f80ca3ca-1c5e-4c8f-b764-1de9cb41da71" />
+<img width="397" height="512" alt="Screenshot" src="https://github.com/user-attachments/assets/f3a5032c-4847-4a11-923c-7d7fe2146863" />
 
 ---
 
