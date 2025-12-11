@@ -251,6 +251,8 @@ body {
     justify-content: center;
     flex-shrink: 0;
     transition: background 0.25s, color 0.25s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .action-btn:hover {
