@@ -1,4 +1,4 @@
-// main.js
+// client.js
 if (!window.crypto || !window.crypto.getRandomValues) {
     window.crypto = { getRandomValues: arr => arr.map(() => Math.floor(Math.random() * 256)) };
 }
