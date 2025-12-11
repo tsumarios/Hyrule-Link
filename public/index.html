@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Hyrule Link - Sheikah Slate</title>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Libraries -->
+    <script src="/nacl.min.js"></script>
+    <script src="/nacl-util.min.js"></script>
+    <script src="/socket.io.min.js"></script>
+</head>
+
+<body>
+
+    <div id="app">
+        <div id="header">
+            <div class="logo">
+                HYRULE LINK
+                <span id="identity">Connecting...</span>
+            </div>
+            <div class="online-box">
+                <div class="online-count"><span id="countNum">0</span></div>
+                <div class="online-names" id="nameList">Offline</div>
+            </div>
+        </div>
+
+        <div id="keyPanel">
+            <div style="font-size:0.6rem; color:#aaa; margin-bottom:4px; text-transform:uppercase;">Secure Key (Tap to
+                Copy)</div>
+            <div id="keyBox">...</div>
+        </div>
+
+        <div id="messages"></div>
+        <div class="typing-bar" id="typingIndicator"></div>
+
+        <div id="form-container">
+            <button class="action-btn" id="nudgeBtn" title="Hey Listen!">🧚</button>
+
+            <input id="input" placeholder="Type or /rps /flip /roll /trivia" autocomplete="off" />
+            <button id="sendBtn">SEND</button>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
