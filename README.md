@@ -178,10 +178,9 @@ Bluetooth tethering can be used as an alternative transport.
 * LinkedIn: **linkedin.com/in/marioraciti**
 * Twitter: **twitter.com/tsumarios**
 
-If you find the project useful:
+*If you want to support me, I would be grateful ❤️*
 
-<a href="https://www.buymeacoffee.com/tsumarios" target="_blank">
-  <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="40">
-</a>
+<a href="https://www.buymeacoffee.com/tsumarios" target="_blank"><img
+        src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="40"></a>
 
 **Happy Flying, Hylian\!** ⚔️
