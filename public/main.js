@@ -60,11 +60,28 @@ function setupSession(k) {
 
     keyBox.textContent = k;
     keyBox.addEventListener('click', async () => {
+        if (!keyBox.textContent) return;
         try {
-            await navigator.clipboard.writeText(k);
-            alert("Copied!");
+            // Use Clipboard API if available
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(keyBox.textContent);
+                alert("Copied to clipboard!");
+            } else {
+                // Fallback for older browsers
+                const ta = document.createElement("textarea");
+                ta.value = keyBox.textContent;
+                ta.style.position = "fixed";  // prevent scrolling
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                const successful = document.execCommand('copy');
+                document.body.removeChild(ta);
+                if (successful) alert("Copied to clipboard (fallback)!");
+                else alert("Failed to copy. Please copy manually.");
+            }
         } catch (err) {
-            console.error("Clipboard copy failed", err);
+            console.error("Copy failed:", err);
+            alert("Failed to copy. Please copy manually.");
         }
     });
 }
