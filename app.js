@@ -10,7 +10,7 @@ const io = new Server(server);
 
 // --- Offline Library Check ---
 ['nacl.min.js', 'nacl-util.min.js', 'socket.io.min.js'].forEach(f => {
-    if (!fs.existsSync('./' + f)) console.log(`⚠️  Missing library: ${f}`);
+    if (!fs.existsSync('./public/' + f)) console.log(`⚠️  Missing library: ${f}`);
 });
 
 app.use(express.static(__dirname));
