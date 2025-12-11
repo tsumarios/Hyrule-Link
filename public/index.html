@@ -4,47 +4,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="Offline, end-to-end encrypted LAN chat with Hyrule aesthetic.">
+    <meta name="theme-color" content="#1a1a1a">
     <title>Hyrule Link - Sheikah Slate</title>
+
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1">
+
     <!-- Libraries -->
-    <script src="nacl.min.js"></script>
-    <script src="nacl-util.min.js"></script>
-    <script src="socket.io.min.js"></script>
+    <script src="nacl.min.js" defer></script>
+    <script src="nacl-util.min.js" defer></script>
+    <script src="socket.io.min.js" defer></script>
+    <script src="client.js?v=1" defer></script>
 </head>
 
 <body>
 
+    <noscript>
+        <div style="color:red; text-align:center; margin-top:20px;">
+            ⚠️ JavaScript is required to use Hyrule Link.
+        </div>
+    </noscript>
+
     <div id="app">
-        <div id="header">
+
+        <header id="header" role="banner">
             <div class="logo">
                 HYRULE LINK
                 <span id="identity">Connecting...</span>
             </div>
             <div class="online-box">
-                <div class="online-count"><span id="countNum">0</span></div>
-                <div class="online-names" id="nameList">Offline</div>
+                <div class="online-count" aria-label="Online users"><span id="countNum">0</span></div>
+                <div class="online-names" id="nameList" aria-label="Usernames online">Offline</div>
             </div>
-        </div>
+        </header>
 
-        <div id="keyPanel">
-            <div style="font-size:0.6rem; color:#aaa; margin-bottom:4px; text-transform:uppercase;">Secure Key (Tap to
-                Copy)</div>
-            <div id="keyBox">...</div>
-        </div>
+        <section id="keyPanel" role="region" aria-label="Secure Session Key">
+            <div style="font-size:0.6rem; color:#aaa; margin-bottom:4px; text-transform:uppercase;">
+                Secure Key (Tap to Copy)
+            </div>
+            <div id="keyBox" role="textbox" aria-readonly="true">...</div>
+        </section>
 
-        <div id="messages"></div>
-        <div class="typing-bar" id="typingIndicator"></div>
+        <section id="chat" role="main">
+            <div id="messages" role="log" aria-live="polite"></div>
+            <div class="typing-bar" id="typingIndicator"></div>
+        </section>
 
         <div id="form-container">
-            <button class="action-btn" id="nudgeBtn" title="Hey Listen!">🧚</button>
-
-            <input id="input" placeholder="Type or /rps /flip /roll /trivia" autocomplete="off" />
-            <button id="sendBtn">SEND</button>
+            <button type="button" class="action-btn" id="nudgeBtn" title="Hey Listen!"
+                aria-label="Send a nudge">🧚</button>
+            <input type="text" id="input" placeholder="Type or /rps /flip /roll /trivia" autocomplete="off"
+                aria-label="Chat input" />
+            <button type="button" id="sendBtn" aria-label="Send message">SEND</button>
         </div>
+
     </div>
 
-    <script src="main.js"></script>
 </body>
 
 </html>
