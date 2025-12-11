@@ -76,7 +76,7 @@ function setupSession(k) {
                 ta.select();
                 const successful = document.execCommand('copy');
                 document.body.removeChild(ta);
-                if (successful) alert("Copied to clipboard (fallback)!");
+                if (successful) alert("Copied to clipboard!");
                 else alert("Failed to copy. Please copy manually.");
             }
         } catch (err) {

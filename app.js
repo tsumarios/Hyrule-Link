@@ -47,7 +47,13 @@ const TRIVIA_DB = [
     "Which Korok seeds are needed to upgrade all armor? (900 – full set)"
 ];
 
-// Helper: Update room counts
+// --- LOGGING HELPER ---
+function logEvent(type, msg) {
+    const timestamp = new Date().toISOString();
+    console.log(`[${timestamp}] [${type}] ${msg}`);
+}
+
+// --- ROOM UPDATE HELPER ---
 async function updateRoom(roomKey) {
     if (!roomKey) return;
     const sockets = await io.in(roomKey).fetchSockets();
@@ -55,21 +61,28 @@ async function updateRoom(roomKey) {
     io.to(roomKey).emit('room_update', { count: names.length, names: names });
 }
 
+// --- CONNECTION ---
 io.on('connection', socket => {
     const charName = CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
     users[socket.id] = charName;
     socket.sessionKey = null;
 
+    logEvent('CONNECT', `${charName} connected (socket: ${socket.id})`);
+
     socket.emit('identity', charName);
 
     socket.on('join', keyHash => {
-        if (socket.sessionKey) socket.leave(socket.sessionKey);
+        const previousRoom = socket.sessionKey;
+        if (previousRoom) socket.leave(previousRoom);
+
         socket.sessionKey = keyHash;
         socket.join(keyHash);
 
         const roomHistory = messageHistory.filter(m => m.keyHash === keyHash);
         socket.emit('history', roomHistory);
         updateRoom(keyHash);
+
+        logEvent('JOIN', `${charName} joined room ${keyHash}`);
     });
 
     socket.on('chat message', msg => {
@@ -78,8 +91,11 @@ io.on('connection', socket => {
         const sender = users[socket.id];
         const room = socket.sessionKey;
 
+        logEvent('MSG', `[${room}] ${sender}: ${msg.text || '(encrypted)'}`);
+
         // --- COMMANDS ---
         if (msg.text && msg.text.startsWith('/')) {
+            logEvent('CMD', `[${room}] ${sender} used command: ${msg.text}`);
             let sysText = "";
 
             // 1. RPS LOGIC (The Fix)
@@ -155,6 +171,7 @@ io.on('connection', socket => {
     socket.on('nudge', () => {
         if (!socket.sessionKey) return;
         socket.to(socket.sessionKey).emit('nudge_alert', users[socket.id]);
+        logEvent('NUDGE', `${users[socket.id]} nudged room ${socket.sessionKey}`);
     });
 
     socket.on('typing', () => {
@@ -165,14 +182,14 @@ io.on('connection', socket => {
     socket.on('reaction', data => {
         if (!socket.sessionKey) return;
         socket.to(socket.sessionKey).emit('reaction', data);
+        logEvent('REACTION', `${users[socket.id]} reacted with ${data.emoji} in room ${socket.sessionKey}`);
     });
 
     socket.on('disconnect', () => {
         const room = socket.sessionKey;
         // If the disconnected user had a pending game, clear it
-        if (rpsPending[room] && rpsPending[room].id === socket.id) {
-            delete rpsPending[room];
-        }
+        if (rpsPending[room] && rpsPending[room].id === socket.id) delete rpsPending[room];
+        logEvent('DISCONNECT', `${users[socket.id]} disconnected from ${room || 'no room'}`);
         delete users[socket.id];
         if (room) updateRoom(room);
     });
