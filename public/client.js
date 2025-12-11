@@ -213,7 +213,7 @@ function handleReaction(data) {
 // --- EVENT BINDINGS ---
 sendBtn.addEventListener('click', sendMessage);
 input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
-nudgeBtn.addEventListener('click', () => { socket.emit('nudge'); nudgeBtn.blur() });
+nudgeBtn.addEventListener('click', () => socket.emit('nudge'));
 input.addEventListener('input', () => {
     socket.emit('typing', {});
     clearTimeout(typingTimer);
