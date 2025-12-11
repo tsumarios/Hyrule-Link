@@ -1,4 +1,4 @@
-// client.js
+// main.js
 if (!window.crypto || !window.crypto.getRandomValues) {
     window.crypto = { getRandomValues: arr => arr.map(() => Math.floor(Math.random() * 256)) };
 }
@@ -59,14 +59,14 @@ function setupSession(k) {
     socket.emit('join', sessionHash);
 
     keyBox.textContent = k;
-    keyBox.onclick = () => {
-        const ta = document.createElement("textarea");
-        ta.value = k;
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand('copy'); alert("Copied!"); } catch (e) { }
-        document.body.removeChild(ta);
-    };
+    keyBox.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(k);
+            alert("Copied!");
+        } catch (err) {
+            console.error("Clipboard copy failed", err);
+        }
+    });
 }
 
 // --- SOCKET HANDLERS ---
@@ -80,14 +80,17 @@ socket.on('room_update', data => {
 socket.on('system_alert', msg => addSystemMsg(msg.text));
 
 socket.on('nudge_alert', sender => {
-    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
     addSystemMsg(`🧚 ${sender} says: Hey Listen!`);
+    if (navigator.vibrate) {
+        try { navigator.vibrate([200, 100, 200]); }
+        catch (e) { console.warn("Vibration blocked", e); }
+    }
 });
 
-socket.on('history', hist => { hist.forEach(m => processIncoming(m)); });
+socket.on('history', hist => hist.forEach(m => processIncoming(m)));
 socket.on('chat message', msg => processIncoming(msg));
 socket.on('typing', user => {
-    typingIndicator.textContent = user + ' is typing...';
+    typingIndicator.textContent = `${user} is typing...`;
     setTimeout(() => typingIndicator.textContent = '', 1500);
 });
 socket.on('reaction', handleReaction);
@@ -124,7 +127,7 @@ function addMessage(text, type, id = null, senderName = "") {
         const btn = document.createElement('span');
         btn.className = 'rxn-btn';
         btn.innerHTML = `${emoji} <span>0</span>`;
-        btn.onclick = () => {
+        btn.addEventListener('click', () => {
             const isActive = !btn.classList.contains('active');
             btn.classList.toggle('active');
             const countS = btn.querySelector('span');
@@ -133,7 +136,7 @@ function addMessage(text, type, id = null, senderName = "") {
             countS.textContent = c;
             if (c > 0) btn.classList.add('has-votes'); else btn.classList.remove('has-votes');
             socket.emit('reaction', { id, emoji, remove: !isActive });
-        };
+        });
         bar.appendChild(btn);
     });
     div.appendChild(bar);
@@ -191,14 +194,14 @@ function handleReaction(data) {
 }
 
 // --- EVENT BINDINGS ---
-sendBtn.onclick = sendMessage;
-input.onkeypress = e => { if (e.key === 'Enter') sendMessage(); };
-nudgeBtn.onclick = () => { socket.emit('nudge'); };
-input.oninput = () => {
+sendBtn.addEventListener('click', sendMessage);
+input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+nudgeBtn.addEventListener('click', () => socket.emit('nudge'));
+input.addEventListener('input', () => {
     socket.emit('typing', {});
     clearTimeout(typingTimer);
     typingTimer = setTimeout(() => { }, 1500);
-};
+});
 
-// Initialize
-setTimeout(init, 200);
+// Initialize once DOM is loaded
+document.addEventListener('DOMContentLoaded', init);
